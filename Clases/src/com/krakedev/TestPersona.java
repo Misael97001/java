@@ -8,6 +8,9 @@ public class TestPersona {
 		Persona p2= new Persona();
 		p=new Persona(); //instancio un objeto persona
 		
+		Persona p3=new Persona("Paul");
+		Persona p4=new Persona("Pedro", 43, 1.69);
+		
 		System.out.println("nombre:"+p.getNombre());
 		System.out.println("edad:"+p.getEdad());
 		System.out.println("estatura:"+p.getEdad());
@@ -35,6 +38,12 @@ public class TestPersona {
 		System.out.println("edad:"+p.getEdad());
 		System.out.println("estatura:"+p.getEstatura());
 	
+		System.out.println("*************");
+		System.err.println("PERSONA 4");
+		System.out.println("nombre:"+p4.getNombre());
+		System.out.println("edad:"+p4.getEdad());
+		System.out.println("estatura:"+p4.getEstatura());
+
 		
 		
 	}

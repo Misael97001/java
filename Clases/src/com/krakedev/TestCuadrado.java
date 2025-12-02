@@ -5,13 +5,11 @@ public class TestCuadrado {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Cuadrado c1=new Cuadrado();
-		Cuadrado c2=new Cuadrado();
-		Cuadrado c3=new Cuadrado();
+		Cuadrado c1=new Cuadrado(3);
+		Cuadrado c2=new Cuadrado(6);
+		Cuadrado c3=new Cuadrado(9);
 		
-		c1.setLado(3);
-		c2.setLado(6);
-		c3.setLado(9);
+		
 		
 		double areaC1=c1.calcularArea();
 		double perimetroC1=c1.perimetroCuadrado();
