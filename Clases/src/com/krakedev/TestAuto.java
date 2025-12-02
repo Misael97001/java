@@ -24,6 +24,8 @@ public class TestAuto {
 	 System.out.println("Anio: "+auto2.anio);
 	 System.out.println("Precio: "+auto2.precio);
 	 
+	 
 	}
+
 
 }
