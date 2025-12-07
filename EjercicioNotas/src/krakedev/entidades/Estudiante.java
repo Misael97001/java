@@ -47,8 +47,7 @@ public class Estudiante {
 	}
 
 	public void mostrar() {
-		System.out
-				.println("Estudiante[nombre=" + nombre + ", apellido=" + apellido + ", cedula=" + cedula + ", notas:");
+		System.out.println("Estudiante[nombre=" + nombre + ", apellido=" + apellido + ", cedula=" + cedula + ", notas:");
 
 		for (int i = 0; i < notas.size(); i++) {
 			notas.get(i).mostrar();
