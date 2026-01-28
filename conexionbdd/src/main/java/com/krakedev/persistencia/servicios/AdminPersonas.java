@@ -1,9 +1,12 @@
 package com.krakedev.persistencia.servicios;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,17 +55,17 @@ public class AdminPersonas {
 
 	}
 
-	// EJERCICIO 1: Método actualizar [cite: 3]
+	// EJERCICIO 1: Método actualizar
 	public static void actualizar(Persona persona) throws Exception {
 		Connection con = null; // Declaramos la conexión
 		PreparedStatement ps; // Declaramos el objeto para ejecutar la sentencia SQL
-		LOGGER.trace("Actualizando persona: " + persona); // Registramos el objeto que llega 
+		LOGGER.trace("Actualizando persona: " + persona); // Registramos el objeto que llega
 
 		try {
-			con = ConexionBDD.conectar(); // Abrimos la conexión a la base de datos 
+			con = ConexionBDD.conectar(); // Abrimos la conexión a la base de datos
 
-			// Preparamos la sentencia SQL usando "?" como parámetros 
-			// Nota: La cédula no se actualiza, se usa para encontrar el registro 
+			// Preparamos la sentencia SQL usando "?" como parámetros
+			// Nota: La cédula no se actualiza, se usa para encontrar el registro
 			ps = con.prepareStatement("update personas set nombre=?, apellido=?, estado_civil_codigo=?, "
 					+ "numero_hijos=?, estatura=?, cantidad_ahorrada=?, fecha_nacimiento=?, hora_nacimiento=? "
 					+ "where cedula=?");
@@ -75,23 +78,23 @@ public class AdminPersonas {
 			ps.setDouble(5, persona.getEstatura()); // Incógnita 5: estatura
 			ps.setBigDecimal(6, persona.getCantidadAhorrada()); // Incógnita 6: cantidad ahorrada
 
-			// Convertimos la fecha de java.util.Date a java.sql.Date 
+			// Convertimos la fecha de java.util.Date a java.sql.Date
 			ps.setDate(7, new java.sql.Date(persona.getFechaNacimiento().getTime()));
 
 			// Convertimos la hora de java.util.Date a java.sql.Time
 			ps.setTime(8, new Time(persona.getHoraNacimiento().getTime()));
 
-			// La cédula es la última incógnita para el WHERE 
+			// La cédula es la última incógnita para el WHERE
 			ps.setString(9, persona.getCedula());
 
 			ps.executeUpdate(); // Ejecutamos la actualización en la base de datos
 			LOGGER.debug("Persona actualizada correctamente"); // Log de éxito
 
 		} catch (Exception e) {
-			LOGGER.error("Error al actualizar", e); // Registramos el error detallado 
+			LOGGER.error("Error al actualizar", e); // Registramos el error detallado
 			throw new Exception("Error al actualizar la persona"); // Lanzamos excepción al test
 		} finally {
-			// El bloque finally garantiza que la conexión se cierre siempre 
+			// El bloque finally garantiza que la conexión se cierre siempre
 			try {
 				if (con != null) {
 					con.close(); // Cerramos la conexión para liberar recursos
@@ -103,7 +106,7 @@ public class AdminPersonas {
 		}
 	}
 
-	// EJERCICIO 2: Método eliminar 
+	// EJERCICIO 2: Método eliminar
 	public static void eliminar(String cedula) throws Exception {
 		Connection con = null; // Declaramos la conexión
 		PreparedStatement ps; // Declaramos el objeto para la sentencia SQL
@@ -112,13 +115,13 @@ public class AdminPersonas {
 		try {
 			con = ConexionBDD.conectar(); // Conectamos a la base de datos
 
-			// Sentencia SQL para borrar por clave primaria (cedula) 
+			// Sentencia SQL para borrar por clave primaria (cedula)
 			ps = con.prepareStatement("delete from personas where cedula = ?");
 
 			// Asignamos la cédula recibida al primer "?" de la sentencia
 			ps.setString(1, cedula);
 
-			ps.executeUpdate(); // Ejecutamos el borrado 
+			ps.executeUpdate(); // Ejecutamos el borrado
 			LOGGER.debug("Registro eliminado"); // Log de éxito
 
 		} catch (Exception e) {
@@ -136,5 +139,88 @@ public class AdminPersonas {
 			}
 		}
 
+	}
+
+	public static ArrayList<Persona> buscarPorNombre(String nombreBusqueda) throws Exception {
+		ArrayList<Persona> personas = new ArrayList<Persona>();
+		Connection con = null;
+		PreparedStatement ps;
+		ResultSet rs=null;
+		try {
+			con=ConexionBDD.conectar();
+			ps=con.prepareStatement("select * from personas where nombre like ?");
+			ps.setString(1, "%"+nombreBusqueda+"%");
+			rs=ps.executeQuery();
+			
+			while(rs.next()) {
+				String nombre=rs.getString("nombre");
+				String cedula=rs.getString("cedula");
+				Persona p = new Persona();
+				p.setCedula(cedula);
+				p.setNombre(nombre);
+				personas.add(p);
+			}
+			
+		} catch (Exception e) {
+
+			LOGGER.error("Error al consultar por nombre", e);
+			throw new Exception("Error al consultar por nombre");
+			
+		} finally {
+			// Cerramos la conexión pase lo que pase
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				LOGGER.error("Error con la base de datos al cerrar", e);
+				throw new Exception("Error con la base de datos");
+			}
+		}
+
+		return personas;
+	}
+	
+	public static ArrayList<Persona> buscarPorCedula(String cedulaBuscar) throws Exception{
+		ArrayList<Persona>personas=new ArrayList<Persona>();
+		Connection con = null;
+		PreparedStatement ps;
+		ResultSet rs=null;
+		
+		try {
+			con=ConexionBDD.conectar();
+			ps=con.prepareStatement("select * from personas where cedula = ? ");
+			ps.setString(1, cedulaBuscar);
+			rs=ps.executeQuery();
+			
+			rs.next();
+			String nombre=rs.getString("nombre");
+			String apellido=rs.getString("apellido");
+	//		BigDecimal ahorros=rs.getBigDecimal("cantidadAhorrada");
+		
+			Persona p = new Persona();
+     		p.setNombre(nombre);
+     		p.setApellido(apellido);
+     	//	p.setCantidadAhorrada(ahorros);
+     		personas.add(p);
+		} catch (Exception e) {
+			LOGGER.error("Error al consultar por cedula", e);
+			throw new Exception("Error al consultar por cedula");
+		
+			
+		}finally {
+			// Cerramos la conexión pase lo que pase
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				LOGGER.error("Error con la base de datos al cerrar", e);
+				throw new Exception("Error con la base de datos");
+			}
+		}
+		
+		return personas;
+		
 	}
 }

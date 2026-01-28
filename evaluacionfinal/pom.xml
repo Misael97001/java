@@ -3,12 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
  
-    <groupId>com.krakedev</groupId>
-    <artifactId>conexionbdd</artifactId>
+    <groupId>com.krakedev.moduloii</groupId>
+    <artifactId>evaluacionfinal</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
  
-    <name>conexionbdd</name>
+    <name>evaluacionfinal</name>
     <url>http://www.example.com</url>
  
     <properties>
@@ -54,14 +54,9 @@
             <scope>test</scope>
         </dependency>
         
-        
-		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>42.7.8</version>
-		</dependency>
-		
-	<dependency>
+        <!-- Siempre poner estas dependencias -->
+    
+        	<dependency>
 	    <groupId>org.apache.logging.log4j</groupId>
 	    <artifactId>log4j-api</artifactId>
 	    <version>2.3.2</version>
@@ -73,7 +68,11 @@
 	    <version>2.3.2</version>
 	  </dependency>
 	  
-		
+	  	<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>42.7.8</version>
+		</dependency>
 		
     </dependencies>
     
@@ -116,7 +115,7 @@
                     <configuration>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                        <mainClass>com.krakedev.conexionbdd.App</mainClass>
+                        <mainClass>com.krakedev.moduloii.evaluacionfinal.App</mainClass>
                         </transformer>
                     </transformers>
                     </configuration>
